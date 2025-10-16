@@ -44,5 +44,3 @@ jobs:
             --opt filename="$(basename "$DOCKERFILE_PATH")" \
             --output type=image,name="$DOCKER_IMAGE",push=false
 
-ith:
-          sarif_file: 'trivy-results.sa
