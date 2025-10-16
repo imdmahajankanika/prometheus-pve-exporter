@@ -1,7 +1,10 @@
 name: Install ArgoCD on Alpine
 
 on:
-  workflow_dispatch:  # manual trigger for testing
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   install-argocd:
