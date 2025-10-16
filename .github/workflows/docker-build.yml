@@ -14,7 +14,7 @@ jobs:
 
       - name: Install dependencies in runner pod
         run: |
-          sudo yum install -y curl bash git
+          yum install -y curl bash git
 
       - name: Download ArgoCD CLI
         run: |
