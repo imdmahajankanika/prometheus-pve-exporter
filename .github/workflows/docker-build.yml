@@ -19,28 +19,29 @@ env:
   IMAGE_TAG: ${{ github.sha }}
 jobs:
   build:
-    runs-on: [self-hosted, okd, prod]
-    container:
-      image: moby/buildkit:v0.23.1-rootless
-    env:
-      DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}   # used only as a local image name
-      CONTEXT_PATH: ./                           # adjust as needed
-      DOCKERFILE_PATH: ./Dockerfile             # adjust as needed
+    runs-on: [self-hosted, okd, prod]             # adjust as needed
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup BuildKit
+      - name: Install OpenShift CLI (oc)
         run: |
-          echo "🛠️ Preparing BuildKit environment"
+          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
+          tar -xzf openshift-client-linux.tar.gz
+          chmod +x oc kubectl
+          mv oc kubectl /usr/local/bin/
 
-      - name: Build Docker image locally
+      - name: Install ArgoCD CLI
         run: |
-          echo "🛠️ Build Docker image from $DOCKERFILE_PATH in context $CONTEXT_PATH"
-          buildctl-daemonless.sh build \
-            --frontend=dockerfile.v0 \
-            --local context="$CONTEXT_PATH" \
-            --local dockerfile="$(dirname "$DOCKERFILE_PATH")" \
-            --opt filename="$(basename "$DOCKERFILE_PATH")" \
-            --output type=image,name="$DOCKER_IMAGE",push=false
+          curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x argocd
+          mv argocd /usr/local/bin/
 
+      - name: Show versions
+        run: |
+          echo "OC version:"
+          oc version
+          echo "Kubectl version:"
+          kubectl version --client
+          echo "ArgoCD version:"
+          argocd version
