@@ -18,7 +18,8 @@ env:
   # or use: ghcr.io (GitHub Container Registry)
   IMAGE_NAME: your-org/your-app
   IMAGE_TAG: ${{ github.sha }}
-
+container:
+  image: moby/buildkit:v0.23.1-rootless
 jobs:
   build:
     runs-on: [self-hosted, okd, prod]
