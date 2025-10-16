@@ -9,20 +9,17 @@ on:
 jobs:
   install-argocd:
     runs-on: [self-hosted]  # targets your self-hosted runner
-    container:
-      image: alpine:3.18   # run job inside Alpine container
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install dependencies in runner pod
         run: |
-          apk add --no-cache curl bash git
+          sudo yum install -y curl bash git
 
       - name: Download ArgoCD CLI
         run: |
           curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           chmod +x /usr/local/bin/argocd
 
-      - name: Verify ArgoCD installation
+      - name: Verify
         run: argocd version --client
