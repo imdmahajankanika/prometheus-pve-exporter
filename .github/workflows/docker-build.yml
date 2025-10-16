@@ -43,6 +43,5 @@ jobs:
             --local dockerfile="$(dirname "$DOCKERFILE_PATH")" \
             --opt filename="$(basename "$DOCKERFILE_PATH")" \
             --output type=image,name="$DOCKER_IMAGE",push=false
-
-        with:
+ith:
           sarif_file: 'trivy-results.sarif'
