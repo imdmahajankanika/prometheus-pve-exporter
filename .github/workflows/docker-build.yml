@@ -24,24 +24,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install OpenShift CLI (oc)
-        run: |
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
-          tar -xzf openshift-client-linux.tar.gz
-          chmod +x oc kubectl
-          mv oc kubectl /usr/local/bin/
-
       - name: Install ArgoCD CLI
+        uses: alpine
         run: |
-          curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-          chmod +x argocd
-          mv argocd /usr/local/bin/
-
-      - name: Show versions
-        run: |
-          echo "OC version:"
-          oc version
-          echo "Kubectl version:"
-          kubectl version --client
-          echo "ArgoCD version:"
+          apk add --no-cache curl jq bash >/dev/null 2>&1
+          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v3.0.0/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
           argocd version
