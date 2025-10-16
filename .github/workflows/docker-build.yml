@@ -1,29 +1,25 @@
-name: Build and Push Docker Image
+name: Install ArgoCD on Alpine
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-    paths:
-      - 'src/**'
-      - 'Dockerfile'
-      - '.github/workflows/docker-build.yml'
-  pull_request:
-    branches:
-      - main
-env:
-  REGISTRY: quay.io
-  # or use: ghcr.io (GitHub Container Registry)
-  IMAGE_NAME: your-org/your-app
-  IMAGE_TAG: ${{ github.sha }}
+  workflow_dispatch:  # manual trigger for testing
+
 jobs:
-  build:
-    runs-on: [self-hosted, okd, prod]             # adjust as needed
+  install-argocd:
+    runs-on: [self-hosted]  # targets your self-hosted runner
+    container:
+      image: alpine:3.18   # run job inside Alpine container
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - name: use alpine
-        uses: alpine
-      - name: Install ArgoCD CLI
-        run: apk add --no-cache curl jq bash >/dev/null 2>&1 && curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v3.0.0/argocd-linux-amd64 && chmod +x /usr/local/bin/argocd && argocd version
+
+      - name: Install dependencies
+        run: |
+          apk add --no-cache curl bash git
+
+      - name: Download ArgoCD CLI
+        run: |
+          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
+
+      - name: Verify ArgoCD installation
+        run: argocd version --client
