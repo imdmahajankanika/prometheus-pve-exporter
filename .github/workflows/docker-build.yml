@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Install ArgoCD CLI
+      - name: use alpine
         uses: alpine
+      - name: Install ArgoCD CLI
         run: apk add --no-cache curl jq bash >/dev/null 2>&1 && curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v3.0.0/argocd-linux-amd64 && chmod +x /usr/local/bin/argocd && argocd version
