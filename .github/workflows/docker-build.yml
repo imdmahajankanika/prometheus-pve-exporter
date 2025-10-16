@@ -18,11 +18,11 @@ env:
   # or use: ghcr.io (GitHub Container Registry)
   IMAGE_NAME: your-org/your-app
   IMAGE_TAG: ${{ github.sha }}
-container:
-  image: moby/buildkit:v0.23.1-rootless
 jobs:
   build:
     runs-on: [self-hosted, okd, prod]
+    container:
+      image: moby/buildkit:v0.23.1-rootless
     env:
       DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}   # used only as a local image name
       CONTEXT_PATH: ./                           # adjust as needed
